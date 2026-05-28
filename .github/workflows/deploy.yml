@@ -3,8 +3,8 @@ name: 🚀 Deploy AutoGest Pro a GitHub Pages
 on:
   push:
     branches:
-      - main        # Se dispara automáticamente con cada push a main
-  workflow_dispatch: # También permite ejecutarlo manualmente desde GitHub
+      - main
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -24,23 +24,19 @@ jobs:
       - name: 📥 Checkout del código
         uses: actions/checkout@v4
 
-      - name: ⚙️ Configurar Node.js 18
+      - name: ⚙️ Configurar Node.js 20
         uses: actions/setup-node@v4
         with:
-          node-version: 18
-          cache: "npm"
+          node-version: 20
 
       - name: 📦 Instalar dependencias
-        run: npm ci
+        run: npm install --legacy-peer-deps
 
       - name: 🏗 Build del proyecto
         run: npm run build
         env:
-          # Variables de entorno de Supabase
-          # Configúralas en: GitHub repo → Settings → Secrets → Actions
           REACT_APP_SUPABASE_URL: ${{ secrets.REACT_APP_SUPABASE_URL }}
           REACT_APP_SUPABASE_ANON_KEY: ${{ secrets.REACT_APP_SUPABASE_ANON_KEY }}
-          # Evita que warnings rompan el build
           CI: false
 
       - name: 📤 Subir artefacto de build
